@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Form } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { loginAPI, registerAPI } from '../Services/allAPI'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { tokenAuthorisationContext } from '../Contexts/TokenAuth';
 
 
 function Auth({register}) {
+    const {isAuthorized,setIsAuthorized} = useContext(tokenAuthorisationContext)
     const navigate = useNavigate()
     const [userData,setUserData] = useState({
         username: "",email: "",password: ""
@@ -44,6 +46,7 @@ function Auth({register}) {
             if(result.status===200){
                 sessionStorage.setItem("existingUser",JSON.stringify(result.data.existingUser))
                 sessionStorage.setItem("token",result.data.token)
+                setIsAuthorized(true)
                 setUserData({
                     email:"",password:""
                 })
@@ -65,7 +68,7 @@ function Auth({register}) {
             <div className='card shadow p-5 bg-success'>
                 <div className='row align-items-center'>
                     <div className='col-lg-6'>
-                        <img style={{height:"300px"}} src="https://blog.1password.com/posts/2019/mozilla-extension-program/header.png" alt="" />
+                        <img style={{height:"300px"}} src="https://img.freepik.com/free-vector/two-factor-authentication-concept-illustration_114360-5280.jpg?size=338&ext=jpg&ga=GA1.1.1880011253.1699488000&semt=ais" alt="" />
 
                     </div>
                 <div className='col-lg-6'>

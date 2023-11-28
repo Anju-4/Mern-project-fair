@@ -3,15 +3,31 @@ import {Row,Col} from 'react-bootstrap'
 import titleimage from '../Assests/imagee.jpg'
 import ProjectCard from '../Components/ProjectCard'
 import { Link } from 'react-router-dom'
+import { homeProjectAPI } from '../Services/allAPI'
 
 function Home() {
      const[loggedIn,setLoggedIn] = useState(false)
+     const[homeProjects,setHomeProjects]=useState([])
+    //  api calling
+     const getHomeProjects = async()=>{
+      const result = await homeProjectAPI()
+      if(result.status===200){
+         setHomeProjects(result.data)
+      }else{
+        console.log(result);
+        console.log(result.response.data);
+      }
+     }
+    //  console.log(homeProjects);
+
      useEffect(()=>{
       if(sessionStorage.getItem("token")){
         setLoggedIn(true)
       }else{
         setLoggedIn(false)
       }
+      // api call
+      getHomeProjects()
      },[])
   return (
     <>
@@ -36,12 +52,19 @@ function Home() {
       <div className='all-projects mt-5'>
         <h1 className='text-center mb-5'>Explore our Projects</h1>
         <marquee scrollAmount={15}>
-        <Row>
-          <Col sm={12} md={6} lg={4}>
-            <ProjectCard/>
-          </Col>
+        <div className='d-flex justify-content-between'>
+
+       {
+       homeProjects?.length>0?homeProjects.map(project=>(
+          <div className='me-5'>
+          <ProjectCard project={project}/>
+        </div>
+       )):null
+        
+          }
          
-        </Row>
+        </div>
+        
 
         </marquee>
      <div className='text-center mt-5'><Link to={'/projects'}>View more projects</Link></div>

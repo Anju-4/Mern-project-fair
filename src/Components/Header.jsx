@@ -1,8 +1,20 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Navbar, Container, Button } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { tokenAuthorisationContext } from '../Contexts/TokenAuth'
 
 function Header({ insideDashboard }) {
+  const navigate = useNavigate()
+  const {isAuthorized,setIsAuthorized} = useContext(tokenAuthorisationContext)
+
+  const handleLogout = ()=>{
+    // remove all existing user detail from browser
+    sessionStorage.removeItem("existingUser")
+    sessionStorage.removeItem("token")
+    setIsAuthorized(false)
+    // navigate to login page
+    navigate('/')
+  }
   return (
     <Navbar className="bg-success position-fixed top-0 w-100">
       <Container>
@@ -12,10 +24,10 @@ function Header({ insideDashboard }) {
             Project Fair
           </Link>
         </Navbar.Brand>
-        {insideDashboard && <div className='btn btn-linkms-auto  fw-bolder text-primary fs-5 fw-bolder'>
+        {insideDashboard && <button onClick={handleLogout} className='btn btn-linkms-auto  fw-bolder text-primary fs-5 fw-bolder'>
           LOGOUT <i class="fa-solid fa-right-from-bracket"></i>
 
-        </div>}
+        </button>}
       </Container>
     </Navbar>
   )
